@@ -447,6 +447,7 @@ const ProgrammingChat = () => {
       setMessages([
         ...messages,
         { sender: 'user', text },
+        
         { sender: 'assistant', text: response }
       ]);
     } catch (error) {
