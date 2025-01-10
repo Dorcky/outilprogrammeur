@@ -14,6 +14,9 @@ import {
 
 // Services
 import { geminiService } from './services/gemini.js';
+// Components
+import CodeGenerator from './CodeGenerator'; // Importez le composant CodeGenerator
+
 
 // Components
 const Navbar = () => (
@@ -45,6 +48,11 @@ const Navbar = () => (
           <Link to="/programming-chat" className="hover:text-blue-400 flex items-center gap-2">
             <MessageSquare size={20} />
             Chat Dev
+            </Link>
+          {/* Ajoutez ce lien pour le générateur de code */}
+          <Link to="/code-generator" className="hover:text-blue-400 flex items-center gap-2">
+            <Code size={20} />
+            Générateur de Code
           </Link>
         </div>
       </div>
@@ -490,6 +498,7 @@ const App = () => {
           <Route path="/debugging" element={<Debugging />} />
           <Route path="/file-chat" element={<FileChat />} />
           <Route path="/programming-chat" element={<ProgrammingChat />} />
+          <Route path="/code-generator" element={<CodeGenerator />} /> {/* Nouvelle route pour le générateur de code */}
           <Route path="/" element={<ProgrammingChat />} />
         </Routes>
       </div>
