@@ -1,10 +1,61 @@
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Copy } from 'lucide-react';
+
+const Card = ({ children, className }) => (
+  <div className={`bg-white p-6 rounded-lg shadow-lg ${className}`}>
+    {children}
+  </div>
+);
+
+const Button = ({ children, onClick, disabled, className }) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    className={`py-2 px-4 rounded-md text-white bg-blue-500 hover:bg-blue-600 ${className}`}
+  >
+    {children}
+  </button>
+);
+
+const Select = ({ value, onValueChange, children }) => (
+  <select
+    value={value}
+    onChange={(e) => onValueChange(e.target.value)}
+    className="block w-full text-sm border rounded-md p-2"
+  >
+    {children}
+  </select>
+);
+
+const Textarea = ({ value, onChange, className, placeholder }) => (
+  <textarea
+    value={value}
+    onChange={onChange}
+    className={`block w-full p-4 border rounded-md ${className}`}
+    placeholder={placeholder}
+  />
+);
+
+const Tabs = ({ children, defaultValue }) => (
+  <div className="space-y-4">{children}</div>
+);
+
+const TabsList = ({ children }) => (
+  <div className="flex border-b">{children}</div>
+);
+
+const TabsTrigger = ({ value, children, onClick }) => (
+  <button
+    onClick={onClick}
+    className="py-2 px-4 text-sm font-semibold text-blue-500 hover:text-blue-700"
+  >
+    {children}
+  </button>
+);
+
+const TabsContent = ({ value, children }) => (
+  <div className="pt-4">{children}</div>
+);
 
 const CodeGenerator = () => {
   const [content, setContent] = useState('');
@@ -27,17 +78,17 @@ const CodeGenerator = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_GEMINI_API_KEY}`
+          'Authorization': `Bearer ${process.env.REACT_APP_GEMINI_API_KEY}`,
         },
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `Generate a complete ${language} web service/API based on this schema: ${content}`
-            }]
-          }]
-        })
+              text: `Generate a complete ${language} web service/API based on this schema: ${content}`,
+            }],
+          }],
+        }),
       });
-      
+
       const data = await response.json();
       setGeneratedCode(data.candidates[0].content.parts[0].text);
     } catch (error) {
@@ -54,14 +105,14 @@ const CodeGenerator = () => {
     <div className="max-w-4xl mx-auto p-4">
       <Card className="p-6">
         <h2 className="text-2xl font-bold mb-4">Code Generator</h2>
-        
+
         <div className="space-y-4">
           <Tabs defaultValue="paste">
             <TabsList>
-              <TabsTrigger value="paste">Paste Content</TabsTrigger>
-              <TabsTrigger value="upload">Upload File</TabsTrigger>
+              <TabsTrigger value="paste" onClick={() => {}}>Paste Content</TabsTrigger>
+              <TabsTrigger value="upload" onClick={() => {}}>Upload File</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="paste">
               <Textarea 
                 placeholder="Paste your JSON or SQL content here..."
@@ -70,7 +121,7 @@ const CodeGenerator = () => {
                 className="min-h-[200px]"
               />
             </TabsContent>
-            
+
             <TabsContent value="upload">
               <input
                 type="file"
@@ -82,14 +133,9 @@ const CodeGenerator = () => {
           </Tabs>
 
           <Select value={language} onValueChange={setLanguage}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Select language" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="nodejs">Node.js</SelectItem>
-              <SelectItem value="php">PHP</SelectItem>
-              <SelectItem value="python">Python</SelectItem>
-            </SelectContent>
+            <option value="nodejs">Node.js</option>
+            <option value="php">PHP</option>
+            <option value="python">Python</option>
           </Select>
 
           <Button 
@@ -114,8 +160,6 @@ const CodeGenerator = () => {
               </pre>
               <Button
                 onClick={copyToClipboard}
-                variant="outline"
-                size="sm"
                 className="absolute top-2 right-2"
               >
                 <Copy className="h-4 w-4" />
